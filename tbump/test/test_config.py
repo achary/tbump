@@ -32,7 +32,10 @@ def test_happy_parse(test_project: Path) -> None:
         search="version_info = {current_version}",
         version_template='({major}, {minor}, {patch}, "{channel}", {release})',
     )
-
+    cargo_toml = File(
+        src="Cargo.toml",
+        search='name = "my-project"\\nversion = "{current_version}"',
+    )
     channel = Field(
         name="channel",
         default="",
@@ -61,7 +64,7 @@ def test_happy_parse(test_project: Path) -> None:
 
     assert config.version_regex.pattern == expected_pattern
 
-    assert config.files == [foo_json, version_txt, pub_js, glob, version_info]
+    assert config.files == [foo_json, cargo_toml, version_txt, pub_js, glob, version_info]
     assert config.fields == [channel, release]
 
     assert config.current_version == "1.2.41-alpha-1"
